@@ -130,4 +130,79 @@ declare module WalletTypes {
   export interface ISubmitTransfer {
     tx_hash_list: string[];
   }
+
+  export interface IRequestSweepDust {
+    get_tx_keys?: boolean;
+    do_not_relay?: boolean;
+    get_tx_hex?: boolean;
+    get_tx_metadata?: boolean;
+  }
+
+  export interface ISweep {
+    tx_hash_list?: string[];
+    tx_key_list?: string[];
+    amount_list?: number[];
+    fee_list?: number[];
+    tx_metadata_list?: string[];
+    multisig_txset: string;
+    unsigned_txset: string;
+  }
+
+  export interface IRequestSweep {
+    address: string;
+    account_index: number;
+    subaddr_indices?: number[];
+    priority?: number;
+    mixin?: number;
+    ring_size?: number;
+    unlock_time?: number;
+    get_tx_keys?: boolean;
+    below_amount?: number;
+    do_not_relay?: boolean;
+    get_tx_hex?: boolean;
+    get_tx_metadata?: boolean;
+  }
+
+  export interface ITxHash {
+    tx_hash: string;
+  }
+
+  export interface Payment {
+    address: string;
+    amount: number;
+    block_height: number;
+    payment_id: string;
+    subaddr_index: IAddressIndex;
+    tx_hash: string;
+    unlock_time: number;
+  }
+
+  export interface IPayments {
+    payments: Payment[];
+  }
+
+  export interface IRequestIncomingTransfers {
+    transfer_type: string;
+    account_index?: number;
+    subaddr_indices?: number[];
+    verbose?: boolean;
+  }
+
+  export interface Transfer {
+    amount: any;
+    global_index: number;
+    key_image: string;
+    spent: boolean;
+    subaddr_index: number;
+    tx_hash: string;
+    tx_size: number;
+  }
+
+  export interface ITransfers {
+    transfers: Transfer[];
+  }
+
+  export interface IQuerykey {
+    key: string;
+  }
 }
