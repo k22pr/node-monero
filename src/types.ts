@@ -72,4 +72,62 @@ declare module WalletTypes {
   export interface ILabelAccount {
     account_tags: IAccountTag[];
   }
+
+  export interface IHeight {
+    height: number;
+  }
+
+  export interface IDestination {
+    amount: any;
+    address: string;
+  }
+
+  export interface IRequestTransfer {
+    destinations: IDestination[];
+    account_index: number;
+    subaddr_indices: number[];
+    mixin?: number;
+    priority: number;
+    ring_size: number;
+    get_tx_key: boolean;
+    unlock_time?: number;
+    do_not_relay?: boolean;
+    get_tx_hex?: boolean;
+    get_tx_metadata?: boolean;
+  }
+
+  export interface ITransfer {
+    amount: number;
+    fee: number;
+    multisig_txset: string;
+    tx_blob: string;
+    tx_hash: string;
+    tx_key: string;
+    tx_metadata: string;
+    unsigned_txset: string;
+  }
+
+  export interface ITransferSplit {
+    amount_list: number[];
+    fee_list: number[];
+    multisig_txset: string;
+    tx_hash_list: string[];
+    tx_key_list: string[];
+    unsigned_txset: string;
+  }
+
+  export interface ISignTransfer {
+    amount: number;
+    fee: number;
+    multisig_txset: string;
+    tx_blob: string;
+    tx_hash: string;
+    tx_key: string;
+    tx_metadata: string;
+    unsigned_txset: string;
+  }
+
+  export interface ISubmitTransfer {
+    tx_hash_list: string[];
+  }
 }
