@@ -8,70 +8,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var axios_1 = __importDefault(require("axios"));
-var MoneroWallet = /** @class */ (function () {
+const axios_1 = __importDefault(require("axios"));
+class MoneroWallet {
     //init
-    function MoneroWallet(hostname, port, user, password) {
-        if (user === void 0) { user = ""; }
-        if (password === void 0) { password = ""; }
+    constructor(hostname = "127.0.0.1", port = 18082, user = "", password = "") {
         this.hostname = hostname;
         this.port = Number(port);
         this.user = user;
         this.password = password;
         // this.client = rpc.Client.$create(this.port, this.hostname);
     }
-    MoneroWallet.prototype.request = function (method, params) {
-        return __awaiter(this, void 0, void 0, function () {
-            var options, res;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        options = { jsonrpc: "2.0", id: "0", method: method, params: params };
-                        return [4 /*yield*/, axios_1.default.post("http://" + this.hostname + ":" + this.port + "/json_rpc", options)];
-                    case 1:
-                        res = _a.sent();
-                        if (res.status == 200) {
-                            return [2 /*return*/, res.data];
-                        }
-                        else {
-                            return [2 /*return*/, null];
-                        }
-                        return [2 /*return*/];
-                }
-            });
+    request(method, params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let options = { jsonrpc: "2.0", id: "0", method, params };
+            const res = yield axios_1.default.post(`http://${this.hostname}:${this.port}/json_rpc`, options);
+            if (res.status == 200) {
+                return res.data;
+            }
+            else {
+                return null;
+            }
         });
-    };
+    }
     // public async setDemon(){
     //   return await this.request()
     // }
@@ -80,206 +42,310 @@ var MoneroWallet = /** @class */ (function () {
      * @param account_index unsigned int; Return balance for this account.
      * @param address_indicesarray of unsigned int; (Optional) Return balance detail for those subaddresses.
      */
-    MoneroWallet.prototype.getBalance = function (account_index, address_indices) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("get_balance", {
-                            account_index: account_index,
-                            address_indices: address_indices,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    getBalance(account_index, address_indices) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("get_balance", {
+                account_index,
+                address_indices,
             });
         });
-    };
+    }
     /**
      * Return the wallet's addresses for an account. Optionally filter for specific set of subaddresses.
      * @param account_index unsigned int; Return subaddresses for this account.
      * @param address_index array of unsigned int; (Optional) List of subaddresses to return from an account.
      */
-    MoneroWallet.prototype.getAddress = function (account_index, address_index) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("get_address_index", {
-                            account_index: account_index,
-                            address_index: address_index,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    getAddress(account_index, address_index) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("get_address_index", {
+                account_index,
+                address_index,
             });
         });
-    };
+    }
     /**
      * Get account and address indexes from a specific (sub)address
      */
-    MoneroWallet.prototype.getAddressIndex = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("get_address_index")];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
+    getAddressIndex() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("get_address_index");
         });
-    };
+    }
     /**
      * Create a new address for an account. Optionally, label the new address.
      * @param account_index unsigned int; Create a new address for this account.
      * @param [label] string; (Optional) Label for the new address.
      */
-    MoneroWallet.prototype.createAddress = function (account_index, label) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("create_address", {
-                            account_index: account_index,
-                            label: label,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    createAddress(account_index, label) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("create_address", {
+                account_index,
+                label,
             });
         });
-    };
+    }
     /**
      * Label an address.
      * @param index subaddress index; JSON Object containing the major & minor address index:
      * @param label string; Label for the address.
      */
-    MoneroWallet.prototype.labelAddress = function (index, label) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("label_address", {
-                            index: index,
-                            label: label,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    labelAddress(index, label) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("label_address", {
+                index,
+                label,
             });
         });
-    };
+    }
     /**
      * Analyzes a string to determine whether it is a valid monero wallet address and returns the result and the address specifications.
      * @param address string; The address to validate.
      * @param [any_net_type] boolean (Optional); If true, consider addresses belonging to any of the three Monero networks (mainnet, stagenet, and testnet) valid. Otherwise, only consider an address valid if it belongs to the network on which the rpc-wallet's current daemon is running (Defaults to false).
      * @param [allow_openalias]  boolean (Optional); If true, consider OpenAlias-formatted addresses valid (Defaults to false).
      */
-    MoneroWallet.prototype.validateAddress = function (address, any_net_type, allow_openalias) {
-        if (allow_openalias === void 0) { allow_openalias = false; }
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("validate_address", {
-                            address: address,
-                            any_net_type: any_net_type,
-                            allow_openalias: allow_openalias,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    validateAddress(address, any_net_type, allow_openalias = false) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("validate_address", {
+                address,
+                any_net_type,
+                allow_openalias,
             });
         });
-    };
+    }
     /**
      * Get all accounts for a wallet. Optionally filter accounts by tag.
      * @param [tag] string; (Optional) Tag for filtering accounts.
      */
-    MoneroWallet.prototype.getAccounts = function (tag) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("get_accounts", {
-                            tag: tag,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    getAccounts(tag) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("get_accounts", {
+                tag,
             });
         });
-    };
+    }
     /**
      * Create a new account with an optional label.
      * @param [label] string; (Optional) Label for the account.
      */
-    MoneroWallet.prototype.createAccount = function (label) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("create_account", {
-                            label: label,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    createAccount(label) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("create_account", {
+                label,
             });
         });
-    };
+    }
     /**
      * Label an account.
      * @param account_index unsigned int; Apply label to account at this index.
      * @param label  string; Label for the account.
      */
-    MoneroWallet.prototype.labelAccount = function (account_index, label) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("label_account", {
-                            account_index: account_index,
-                            label: label,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    labelAccount(account_index, label) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("label_account", {
+                account_index,
+                label,
             });
         });
-    };
+    }
     /**
      * Get a list of user-defined account tags.
      */
-    MoneroWallet.prototype.getAccountTags = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("get_account_tags", {})];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
+    getAccountTags() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("get_account_tags", {});
         });
-    };
+    }
     /**
      * Apply a filtering tag to a list of accounts.
      * @param tag string; Tag for the accounts.
      * @param accounts array of unsigned int; Tag this list of accounts.
      * @returns
      */
-    MoneroWallet.prototype.tagAccounts = function (tag, accounts) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("tag_accounts", {
-                            tag: tag,
-                            accounts: accounts,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    tagAccounts(tag, accounts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("tag_accounts", {
+                tag,
+                accounts,
             });
         });
-    };
+    }
     /**
      * Remove filtering tag from a list of accounts.
      * @param accounts array of unsigned int; Remove tag from this list of accounts.
-     * @returns
      */
-    MoneroWallet.prototype.untagAccounts = function (accounts) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.request("untag_accounts", {
-                            accounts: accounts,
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+    untagAccounts(accounts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("untag_accounts", {
+                accounts,
             });
         });
-    };
-    return MoneroWallet;
-}());
+    }
+    /**
+     * Set description for an account tag.
+     * @param tag string; Set a description for this tag.
+     * @param description string; Description for the tag.
+     */
+    setAccountTagDescruption(tag, description) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("set_account_tag_description", {
+                tag,
+                description,
+            });
+        });
+    }
+    /**
+     * Returns the wallet's current block height.
+     */
+    getHeight() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("get_height", {});
+        });
+    }
+    /**
+     * Send monero to a number of recipients.
+     * @param params
+     * @returns
+     */
+    transfer(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("transfer", Object.assign({}, params));
+        });
+    }
+    /**
+     * Same as transfer, but can split into more than one tx if necessary.
+     * @param params
+     * @returns
+     */
+    transferSplit(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("transfer_split", Object.assign({}, params));
+        });
+    }
+    /**
+     * Sign a transaction created on a read-only wallet (in cold-signing process)
+     * @param unsigned_txset  string. Set of unsigned tx returned by "transfer" or "transfer_split" methods.
+     * @param [export_raw] boolean; (Optional) If true, return the raw transaction data. (Defaults to false)
+     * @returns
+     */
+    signTransfer(unsigned_txset, export_raw) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("sign_transfer", {
+                unsigned_txset,
+                export_raw,
+            });
+        });
+    }
+    /**
+     * Submit a previously signed transaction on a read-only wallet (in cold-signing process).
+     * @param tx_data_hex string; Set of signed tx returned by "sign_transfer"
+     * @returns
+     */
+    submitTransfer(tx_data_hex) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("submit_transfer", {
+                tx_data_hex,
+            });
+        });
+    }
+    /**
+     * Send all dust outputs back to the wallet's, to make them easier to spend (and mix).
+     * @param params
+     * @returns
+     */
+    sweepDust(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("sweep_dust", Object.assign({}, params));
+        });
+    }
+    /**
+     * Send all unlocked balance to an address.
+     * @param params
+     * @returns
+     */
+    sweepAll(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("sweep_all", Object.assign({}, params));
+        });
+    }
+    /**
+     * Send all of a specific unlocked output to an address.
+     * @param params
+     * @returns
+     */
+    sweepSingle(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("sweep_single", Object.assign({}, params));
+        });
+    }
+    /**
+     * Relay a transaction previously created with "do_not_relay":true.
+     * @param hex string; transaction metadata returned from a transfer method with get_tx_metadata set to true.
+     * @returns
+     */
+    relayTx(hex) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("relay_tx", {
+                hex,
+            });
+        });
+    }
+    /**
+     * Save the wallet file.
+     * @returns
+     */
+    store() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("store", {});
+        });
+    }
+    /**
+     * Get a list of incoming payments using a given payment id.
+     * @param payment_id string; Payment ID used to find the payments (16 characters hex).
+     * @returns
+     */
+    getPayment(payment_id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("get_payments", {
+                payment_id,
+            });
+        });
+    }
+    /**
+     * Get a list of incoming payments using a given payment id, or a list of payments ids, from a given height. This method is the preferred method over get_payments because it has the same functionality but is more extendable. Either is fine for looking up transactions by a single payment ID.
+     * @param payment_ids array of: string; Payment IDs used to find the payments (16 characters hex).
+     * @param min_block_height unsigned int; The block height at which to start looking for payments.
+     * @returns
+     */
+    getBulkPayments(payment_ids, min_block_height) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("get_bulk_payments", {
+                payment_ids,
+                min_block_height,
+            });
+        });
+    }
+    /**
+     * Return a list of incoming transfers to the wallet.
+     * @param params
+     * @returns
+     */
+    incomingTransfers(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("incoming_transfers", Object.assign({}, params));
+        });
+    }
+    /**
+     * Return the spend or view private key.
+     * @param key_type string; Which key to retrieve: "mnemonic" - the mnemonic seed (older wallets do not have one) OR "view_key" - the view key
+     * @returns
+     */
+    queryKey(key_type) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.request("query_key", {
+                key_type,
+            });
+        });
+    }
+}
 exports.default = MoneroWallet;
+//# sourceMappingURL=wallet.js.map
