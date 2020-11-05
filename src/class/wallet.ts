@@ -1,4 +1,7 @@
 import axios from "axios";
+var rpc = require("node-json-rpc");
+
+import { WalletTypes } from "../types/types";
 
 class MoneroWallet {
   private client: any;
@@ -18,14 +21,20 @@ class MoneroWallet {
     this.port = Number(port);
     this.user = user;
     this.password = password;
+    this.client = new rpc.Client({
+      host: hostname,
+      port,
+      path: "/json_rpc",
+    });
     // this.client = rpc.Client.$create(this.port, this.hostname);
   }
 
   public async request<T>(method: string, params?: any) {
     let options = { jsonrpc: "2.0", id: "0", method, params };
 
-    const res = await axios.post(`http://${this.hostname}:${this.port}/json_rpc`, options);
-    if (res.status == 200) {
+    const res = await this.client.call(options);
+    console.log(res);
+    if (res.status == 200 && res.status.hasOwnProperty("result")) {
       return res.data as T;
     } else {
       return null;

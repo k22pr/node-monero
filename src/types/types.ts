@@ -1,4 +1,4 @@
-declare module WalletTypes {
+export module WalletTypes {
   export interface IResult<T> {
     id: string;
     jsonrpc: string;
